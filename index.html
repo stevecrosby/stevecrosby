@@ -49,58 +49,5 @@
             </svg>
         </a>
     </div>
-
-    <script>
-        const fonts = [
-            'Roboto', 'Open Sans', 'Lato', 'Montserrat', 'Oswald', 'Raleway', 'Merriweather',
-            'Poppins', 'Noto Sans', 'Rubik', 'Inconsolata', 'Nunito', 'Fira Sans', 'Work Sans',
-            'Playfair Display', 'Quicksand', 'Source Sans Pro', 'Zilla Slab', 'Inter'
-        ];
-
-        const colors = ['#FF6347', '#00BFFF', '#32CD32', '#FFD700', '#8A2BE2', '#FF1493', '#FF4500', '#3CB371', '#40E0D0'];
-        const bgColors = ['#F0F8FF', '#FAEBD7', '#F5F5DC', '#E6E6FA', '#FFFAF0', '#FFFACD', '#D3D3D3', '#F08080', '#E0FFFF'];
-
-        function getRandomFont() {
-            return fonts[Math.floor(Math.random() * fonts.length)];
-        }
-
-        function getRandomColor() {
-            return colors[Math.floor(Math.random() * colors.length)];
-        }
-
-        function getRandomBgColor() {
-            return bgColors[Math.floor(Math.random() * bgColors.length)];
-        }
-
-        function getRandomRotation() {
-            return Math.floor(Math.random() * 360) + 'deg';
-        }
-
-        function getRandomScale() {
-            return (Math.random() * 0.5 + 1).toFixed(2);
-        }
-
-        function getRandomTranslate() {
-            return `${Math.floor(Math.random() * 200) - 100}px ${Math.floor(Math.random() * 200) - 100}px`;
-        }
-
-        function getRandomEffect() {
-            const randomFont = getRandomFont();
-            const randomColor = getRandomColor();
-            const randomBgColor = getRandomBgColor();
-            const randomRotation = getRandomRotation();
-            const randomScale = getRandomScale();
-            const randomTranslate = getRandomTranslate();
-
-            document.body.style.fontFamily = `'${randomFont}', sans-serif';
-            document.body.style.backgroundColor = randomBgColor;
-            document.querySelector('.content').style.color = randomColor;
-            document.querySelector('.content').style.transform = `rotate(${randomRotation}) scale(${randomScale}) translate(${randomTranslate})`;
-        }
-
-        document.body.addEventListener('click', function() {
-            getRandomEffect();
-        });
-    </script>
 </body>
 </html>
