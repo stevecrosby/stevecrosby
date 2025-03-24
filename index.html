@@ -23,7 +23,6 @@
         .content {
             max-width: 280px;
             position: absolute;
-            cursor: grab;
         }
         a {
             color: inherit;
@@ -49,65 +48,5 @@
             </svg>
         </a>
     </div>
-
-    <script>
-        const content = document.querySelector('.content');
-        const originalX = window.innerWidth / 2 - content.offsetWidth / 2;
-        const originalY = window.innerHeight / 2 - content.offsetHeight / 2;
-        let posX = originalX, posY = originalY;
-        let velocityX = 0, velocityY = 0;
-        const friction = 0.98;
-        const magnetStrength = 0.02;
-        let isDragging = false;
-        let offsetX, offsetY;
-
-        content.style.left = `${originalX}px`;
-        content.style.top = `${originalY}px`;
-
-        content.addEventListener('mousedown', (e) => {
-            isDragging = true;
-            offsetX = e.clientX - posX;
-            offsetY = e.clientY - posY;
-        });
-
-        window.addEventListener('mousemove', (e) => {
-            if (isDragging) {
-                posX = e.clientX - offsetX;
-                posY = e.clientY - offsetY;
-            }
-        });
-
-        window.addEventListener('mouseup', () => isDragging = false);
-
-        function animate() {
-            if (!isDragging) {
-                velocityX += (originalX - posX) * magnetStrength;
-                velocityY += (originalY - posY) * magnetStrength;
-            }
-            
-            posX += velocityX;
-            posY += velocityY;
-
-            // Apply friction
-            velocityX *= friction;
-            velocityY *= friction;
-
-            // Bounce off walls
-            if (posX <= 0 || posX + content.offsetWidth >= window.innerWidth) {
-                velocityX *= -1;
-                posX = Math.max(0, Math.min(posX, window.innerWidth - content.offsetWidth));
-            }
-            if (posY <= 0 || posY + content.offsetHeight >= window.innerHeight) {
-                velocityY *= -1;
-                posY = Math.max(0, Math.min(posY, window.innerHeight - content.offsetHeight));
-            }
-
-            content.style.left = `${posX}px`;
-            content.style.top = `${posY}px`;
-
-            requestAnimationFrame(animate);
-        }
-        animate();
-    </script>
 </body>
 </html>
