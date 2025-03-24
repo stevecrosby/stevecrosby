@@ -48,5 +48,28 @@
             </svg>
         </a>
     </div>
+
+    <script>
+        const fonts = [
+            'Roboto', 'Open Sans', 'Lato', 'Montserrat', 'Oswald', 'Raleway', 'Merriweather',
+            'Poppins', 'Noto Sans', 'Rubik', 'Inconsolata', 'Nunito', 'Fira Sans', 'Work Sans',
+            'Playfair Display', 'Quicksand', 'Source Sans Pro', 'Zilla Slab', 'Inter'
+        ];
+
+        function getRandomFont() {
+            return fonts[Math.floor(Math.random() * fonts.length)];
+        }
+
+        function changeFont() {
+            const randomFont = getRandomFont();
+            const link = document.createElement('link');
+            link.href = `https://fonts.googleapis.com/css2?family=${randomFont.replace(/ /g, '+')}&display=swap`;
+            link.rel = 'stylesheet';
+            document.head.appendChild(link);
+            document.body.style.fontFamily = `'${randomFont}', sans-serif`;
+        }
+
+        document.body.addEventListener('click', changeFont);
+    </script>
 </body>
 </html>
