@@ -7,34 +7,22 @@
     <meta name="author" content="Steve Crosby">
     <title>Steve Crosby</title>
     <style>
-        * {
+        body {
             margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        html, body {
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-            font-family: Arial, sans-serif;
-        }
-        #container {
             display: flex;
-            flex-wrap: wrap;
-            width: 300%;
-            height: 300%;
-            position: absolute;
-        }
-        .tile {
-            width: 100vw;
             height: 100vh;
-            display: flex;
             justify-content: center;
             align-items: center;
+            font-family: Arial, sans-serif;
             text-align: center;
+            font-size: 0.9rem;
+            line-height: 1.2rem;
+            background-color: white;
         }
         .content {
             max-width: 280px;
+            position: relative;
+            z-index: 10;
         }
         a {
             color: inherit;
@@ -48,50 +36,73 @@
             width: 20px;
             height: 20px;
         }
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            touch-action: none;
+        }
     </style>
 </head>
 <body>
-    <div id="container">
-        <!-- Duplicate content in a 3x3 grid to simulate infinite space -->
-        <div class="tile"><div class="content"><p>Steve Crosby is a software designer in California, making interfaces at PSA and small apps at Internet Friends LLC.</p><a href="https://www.internetfriends.tech" target="_blank">Internet Friends<svg xmlns="https://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M14.625 2.8125H11.25V3.9375H13.267L8.60225 8.60225L9.39775 9.39775L14.0625 4.733V6.75H15.1875V3.375V2.8125H14.625ZM6.75 3.9375C5.1967 3.9375 3.9375 5.1967 3.9375 6.75V11.25C3.9375 12.8033 5.1967 14.0625 6.75 14.0625H11.25C12.8033 14.0625 14.0625 12.8033 14.0625 11.25V7.875H12.9375V11.25C12.9375 12.182 12.182 12.9375 11.25 12.9375H6.75C5.81802 12.9375 5.0625 12.182 5.0625 11.25V6.75C5.0625 5.81802 5.81802 5.0625 6.75 5.0625H10.125V3.9375H6.75Z" fill="black"/></svg></a></div></div>
+    <canvas id="drawingCanvas"></canvas>
+    <div class="content">
+        <p>Steve Crosby is a software designer in California, making interfaces at PSA and small apps at Internet Friends LLC.</p>
+        <a href="https://www.internetfriends.tech" target="_blank">
+            Internet Friends
+            <svg xmlns="https://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" fill="none">
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M14.625 2.8125H11.25V3.9375H13.267L8.60225 8.60225L9.39775 9.39775L14.0625 4.733V6.75H15.1875V3.375V2.8125H14.625ZM6.75 3.9375C5.1967 3.9375 3.9375 5.1967 3.9375 6.75V11.25C3.9375 12.8033 5.1967 14.0625 6.75 14.0625H11.25C12.8033 14.0625 14.0625 12.8033 14.0625 11.25V7.875H12.9375V11.25C12.9375 12.182 12.182 12.9375 11.25 12.9375H6.75C5.81802 12.9375 5.0625 12.182 5.0625 11.25V6.75C5.0625 5.81802 5.81802 5.0625 6.75 5.0625H10.125V3.9375H6.75Z" fill="black"/>
+            </svg>
+        </a>
     </div>
-
     <script>
-        const container = document.getElementById('container');
-        let x = -window.innerWidth;
-        let y = -window.innerHeight;
-        container.style.transform = `translate(${x}px, ${y}px)`;
+        const canvas = document.getElementById('drawingCanvas');
+        const ctx = canvas.getContext('2d');
+        let drawing = false;
 
-        let startX, startY;
-        window.addEventListener('touchstart', (e) => {
-            startX = e.touches[0].clientX;
-            startY = e.touches[0].clientY;
-        });
-
-        window.addEventListener('touchmove', (e) => {
-            const deltaX = e.touches[0].clientX - startX;
-            const deltaY = e.touches[0].clientY - startY;
-            x -= deltaX;
-            y -= deltaY;
-            wrapAround();
-            container.style.transform = `translate(${x}px, ${y}px)`;
-            startX = e.touches[0].clientX;
-            startY = e.touches[0].clientY;
-        });
-
-        window.addEventListener('wheel', (e) => {
-            x -= e.deltaX;
-            y -= e.deltaY;
-            wrapAround();
-            container.style.transform = `translate(${x}px, ${y}px)`;
-        });
-
-        function wrapAround() {
-            if (x > 0) x -= window.innerWidth;
-            if (x < -2 * window.innerWidth) x += window.innerWidth;
-            if (y > 0) y -= window.innerHeight;
-            if (y < -2 * window.innerHeight) y += window.innerHeight;
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
         }
+
+        function startDrawing(e) {
+            drawing = true;
+            draw(e);
+        }
+
+        function stopDrawing() {
+            drawing = false;
+            ctx.beginPath();
+        }
+
+        function draw(e) {
+            if (!drawing) return;
+            const x = e.touches ? e.touches[0].clientX : e.clientX;
+            const y = e.touches ? e.touches[0].clientY : e.clientY;
+
+            ctx.lineWidth = 1;
+            ctx.lineCap = 'round';
+            ctx.strokeStyle = 'black';
+
+            ctx.lineTo(x, y);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(x, y);
+        }
+
+        window.addEventListener('resize', resizeCanvas);
+        canvas.addEventListener('mousedown', startDrawing);
+        canvas.addEventListener('mousemove', draw);
+        canvas.addEventListener('mouseup', stopDrawing);
+        canvas.addEventListener('mouseout', stopDrawing);
+
+        canvas.addEventListener('touchstart', startDrawing);
+        canvas.addEventListener('touchmove', draw);
+        canvas.addEventListener('touchend', stopDrawing);
+
+        resizeCanvas();
     </script>
 </body>
 </html>
