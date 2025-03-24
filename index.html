@@ -18,11 +18,12 @@
             font-size: 0.9rem;
             line-height: 1.2rem;
             background-color: white;
+            overflow: hidden;
         }
         .content {
             max-width: 280px;
-            position: relative;
-            z-index: 10;
+            position: absolute;
+            cursor: grab;
         }
         a {
             color: inherit;
@@ -36,18 +37,9 @@
             width: 20px;
             height: 20px;
         }
-        canvas {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            touch-action: none;
-        }
     </style>
 </head>
 <body>
-    <canvas id="drawingCanvas"></canvas>
     <div class="content">
         <p>Steve Crosby is a software designer in California, making interfaces at PSA and small apps at Internet Friends LLC.</p>
         <a href="https://www.internetfriends.tech" target="_blank">
@@ -57,54 +49,65 @@
             </svg>
         </a>
     </div>
+
     <script>
-        const canvas = document.getElementById('drawingCanvas');
-        const ctx = canvas.getContext('2d');
-        let drawing = false;
-        const scale = window.devicePixelRatio || 1;
-        const penSize = 1.5; // Pen size in pixels
+        const content = document.querySelector('.content');
+        const originalX = window.innerWidth / 2 - content.offsetWidth / 2;
+        const originalY = window.innerHeight / 2 - content.offsetHeight / 2;
+        let posX = originalX, posY = originalY;
+        let velocityX = 0, velocityY = 0;
+        const friction = 0.98;
+        const magnetStrength = 0.02;
+        let isDragging = false;
+        let offsetX, offsetY;
 
-        function resizeCanvas() {
-            canvas.width = window.innerWidth * scale;
-            canvas.height = window.innerHeight * scale;
-            ctx.scale(scale, scale);
-            ctx.imageSmoothingEnabled = false;
+        content.style.left = `${originalX}px`;
+        content.style.top = `${originalY}px`;
+
+        content.addEventListener('mousedown', (e) => {
+            isDragging = true;
+            offsetX = e.clientX - posX;
+            offsetY = e.clientY - posY;
+        });
+
+        window.addEventListener('mousemove', (e) => {
+            if (isDragging) {
+                posX = e.clientX - offsetX;
+                posY = e.clientY - offsetY;
+            }
+        });
+
+        window.addEventListener('mouseup', () => isDragging = false);
+
+        function animate() {
+            if (!isDragging) {
+                velocityX += (originalX - posX) * magnetStrength;
+                velocityY += (originalY - posY) * magnetStrength;
+            }
+            
+            posX += velocityX;
+            posY += velocityY;
+
+            // Apply friction
+            velocityX *= friction;
+            velocityY *= friction;
+
+            // Bounce off walls
+            if (posX <= 0 || posX + content.offsetWidth >= window.innerWidth) {
+                velocityX *= -1;
+                posX = Math.max(0, Math.min(posX, window.innerWidth - content.offsetWidth));
+            }
+            if (posY <= 0 || posY + content.offsetHeight >= window.innerHeight) {
+                velocityY *= -1;
+                posY = Math.max(0, Math.min(posY, window.innerHeight - content.offsetHeight));
+            }
+
+            content.style.left = `${posX}px`;
+            content.style.top = `${posY}px`;
+
+            requestAnimationFrame(animate);
         }
-
-        function snapToPixel(value) {
-            return Math.floor(value);
-        }
-
-        function startDrawing(e) {
-            drawing = true;
-            draw(e);
-        }
-
-        function stopDrawing() {
-            drawing = false;
-            ctx.beginPath();
-        }
-
-        function draw(e) {
-            if (!drawing) return;
-            const x = snapToPixel(e.touches ? e.touches[0].clientX : e.clientX);
-            const y = snapToPixel(e.touches ? e.touches[0].clientY : e.clientY);
-
-            ctx.fillStyle = 'black';
-            ctx.fillRect(x - Math.floor(penSize / 2), y - Math.floor(penSize / 2), penSize, penSize);
-        }
-
-        window.addEventListener('resize', resizeCanvas);
-        canvas.addEventListener('mousedown', startDrawing);
-        canvas.addEventListener('mousemove', draw);
-        canvas.addEventListener('mouseup', stopDrawing);
-        canvas.addEventListener('mouseout', stopDrawing);
-
-        canvas.addEventListener('touchstart', startDrawing);
-        canvas.addEventListener('touchmove', draw);
-        canvas.addEventListener('touchend', stopDrawing);
-
-        resizeCanvas();
+        animate();
     </script>
 </body>
 </html>
