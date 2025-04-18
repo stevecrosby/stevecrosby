@@ -1,129 +1,53 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Physics Letters</title>
-  <style>
-    html, body {
-      margin: 0;
-      padding: 0;
-      height: 100dvh;
-      width: 100dvw;
-      overflow: hidden;
-      background: white;
-      font-family: Arial, sans-serif;
-    }
-    #scene {
-      position: relative;
-      width: 100dvw;
-      height: 100dvh;
-    }
-    .letter {
-      position: absolute;
-      font-size: 2rem;
-      user-select: none;
-      cursor: grab;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Steve Crosby is a designer in California, currently making interfaces at PSA and small apps at Internet Friends LLC.">
+    <meta name="author" content="Steve Crosby">
+    <title>Steve Crosby</title>
+    <style>
+        body {
+            margin: 0;
+            display: flex;
+            height: 100dvh;
+            justify-content: center;
+            align-items: center;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            font-size: 0.9rem;
+            line-height: 1.2rem;
+            background-color: white;
+            overflow: hidden;
+        }
+        .content {
+            max-width: 280px;
+            position: absolute;
+            transition: all 0.5s ease;
+        }
+        a {
+            color: inherit;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            opacity: 0.5;
+        }
+        svg {
+            width: 20px;
+            height: 20px;
+        }
+    </style>
 </head>
 <body>
-  <div id="scene"></div>
-  <script src="https://cdn.jsdelivr.net/npm/matter-js@0.19.0/build/matter.min.js"></script>
-  <script>
-    const { Engine, Render, Runner, Bodies, Composite, Events, Mouse, MouseConstraint, Body } = Matter;
-
-    const engine = Engine.create();
-    const world = engine.world;
-
-    const width = window.innerWidth;
-    const height = window.innerHeight;
-
-    const scene = document.getElementById('scene');
-
-    const render = Render.create({
-      element: scene,
-      engine: engine,
-      options: {
-        width: width,
-        height: height,
-        wireframes: false,
-        background: 'transparent'
-      }
-    });
-
-    Render.run(render);
-    Runner.run(Runner.create(), engine);
-
-    // Walls
-    const walls = [
-      Bodies.rectangle(width / 2, height + 25, width, 50, { isStatic: true }), // bottom
-      Bodies.rectangle(width / 2, -25, width, 50, { isStatic: true }), // top
-      Bodies.rectangle(-25, height / 2, 50, height, { isStatic: true }), // left
-      Bodies.rectangle(width + 25, height / 2, 50, height, { isStatic: true }) // right
-    ];
-    Composite.add(world, walls);
-
-    // Drag support
-    const mouse = Mouse.create(render.canvas);
-    const mouseConstraint = MouseConstraint.create(engine, {
-      mouse: mouse,
-      constraint: {
-        stiffness: 0.2,
-        render: { visible: false }
-      }
-    });
-    Composite.add(world, mouseConstraint);
-    render.mouse = mouse;
-
-    // Generate a random letter
-    function randomLetter() {
-      const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-      return chars[Math.floor(Math.random() * chars.length)];
-    }
-
-    function createLetter(x, y) {
-      const letter = randomLetter();
-
-      // Create DOM element
-      const el = document.createElement('div');
-      el.className = 'letter';
-      el.textContent = letter;
-      scene.appendChild(el);
-
-      // Measure it
-      el.style.left = '-1000px';
-      el.style.top = '-1000px';
-      document.body.appendChild(el);
-      const rect = el.getBoundingClientRect();
-      el.remove();
-
-      const w = rect.width;
-      const h = rect.height;
-
-      // Add body
-      const body = Bodies.rectangle(x, y, w, h, {
-        restitution: 0.7,
-        friction: 0.2,
-        frictionAir: 0.01
-      });
-
-      Composite.add(world, body);
-
-      // Sync position every frame
-      Events.on(engine, 'beforeUpdate', () => {
-        el.style.left = `${body.position.x - w / 2}px`;
-        el.style.top = `${body.position.y - h / 2}px`;
-      });
-    }
-
-    window.addEventListener('click', e => {
-      createLetter(e.clientX, e.clientY);
-    });
-
-    window.addEventListener('resize', () => {
-      // Optional: Add resize handling
-    });
-  </script>
+    <div class="content">
+        <p>Steve Crosby is a designer in California, currently making interfaces at PSA and small apps at Internet Friends LLC.</p>
+        <a href="https://www.internetfriends.tech" target="_blank">
+            Internet Friends
+            <svg xmlns="https://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" fill="none">
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M14.625 2.8125H11.25V3.9375H13.267L8.60225 8.60225L9.39775 9.39775L14.0625 4.733V6.75H15.1875V3.375V2.8125H14.625ZM6.75 3.9375C5.1967 3.9375 3.9375 5.1967 3.9375 6.75V11.25C3.9375 12.8033 5.1967 14.0625 6.75 14.0625H11.25C12.8033 14.0625 14.0625 12.8033 14.0625 11.25V7.875H12.9375V11.25C12.9375 12.182 12.182 12.9375 11.25 12.9375H6.75C5.81802 12.9375 5.0625 12.182 5.0625 11.25V6.75C5.0625 5.81802 5.81802 5.0625 6.75 5.0625H10.125V3.9375H6.75Z" fill="black"/>
+            </svg>
+        </a>
+    </div>
 </body>
 </html>
