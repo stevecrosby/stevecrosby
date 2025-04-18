@@ -3,57 +3,116 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Pixel Grid</title>
+  <title>Random Letters</title>
   <style>
     html, body {
       margin: 0;
       padding: 0;
-      height: 100%;
-      background: #fff;
+      height: 100dvh;
+      width: 100dvw;
+      overflow: hidden;
+      font-family: Arial, sans-serif;
+      background: #ffffff;
     }
-
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(24, 1fr);
-      width: 100vw;
-      height: 100vh;
-    }
-
-    .pixel {
-      background-color: white;
-      border: 1px solid #eee;
-      aspect-ratio: 1 / 1;
-      transition: background-color 0.1s;
-      touch-action: manipulation;
-    }
-
-    .pixel.on {
-      background-color: black;
+    canvas {
+      display: block;
     }
   </style>
 </head>
 <body>
+  <script src="https://cdn.jsdelivr.net/npm/matter-js@0.19.0/build/matter.min.js"></script>
+  <script>
+    const { Engine, Render, Runner, Bodies, Composite, Mouse, MouseConstraint, Body, Events } = Matter;
 
-<div class="grid" id="pixelGrid"></div>
+    const engine = Engine.create();
+    const world = engine.world;
 
-<script>
-  const grid = document.getElementById('pixelGrid');
-  const pixelsPerRow = 24;
-  const rows = Math.ceil(window.innerHeight / (window.innerWidth / pixelsPerRow));
-  const totalPixels = pixelsPerRow * rows;
+    const width = window.innerWidth;
+    const height = window.innerHeight;
 
-  for (let i = 0; i < totalPixels; i++) {
-    const pixel = document.createElement('div');
-    pixel.classList.add('pixel');
-    pixel.addEventListener('click', () => {
-      pixel.classList.toggle('on');
+    const render = Render.create({
+      element: document.body,
+      engine: engine,
+      options: {
+        width: width,
+        height: height,
+        wireframes: false,
+        background: '#ffffff'
+      }
     });
-    grid.appendChild(pixel);
-  }
 
-  // Optional: Handle resizing
-  window.addEventListener('resize', () => location.reload());
-</script>
+    Render.run(render);
+    Runner.run(Runner.create(), engine);
 
+    // Walls
+    const walls = [
+      Bodies.rectangle(width / 2, height + 25, width, 50, { isStatic: true }), // floor
+      Bodies.rectangle(width / 2, -25, width, 50, { isStatic: true }), // ceiling
+      Bodies.rectangle(-25, height / 2, 50, height, { isStatic: true }), // left
+      Bodies.rectangle(width + 25, height / 2, 50, height, { isStatic: true }) // right
+    ];
+    Composite.add(world, walls);
+
+    // Add drag support
+    const mouse = Mouse.create(render.canvas);
+    const mouseConstraint = MouseConstraint.create(engine, {
+      mouse: mouse,
+      constraint: {
+        stiffness: 0.2,
+        render: { visible: false }
+      }
+    });
+    Composite.add(world, mouseConstraint);
+
+    render.mouse = mouse;
+
+    // Helper to generate a random letter
+    function randomLetter() {
+      const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+      return chars[Math.floor(Math.random() * chars.length)];
+    }
+
+    // Create a text body using a canvas
+    function createLetter(x, y) {
+      const letter = randomLetter();
+      const fontSize = 2 * 16; // 2rem in px
+
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      ctx.font = `${fontSize}px Arial`;
+      const textWidth = ctx.measureText(letter).width;
+
+      canvas.width = textWidth;
+      canvas.height = fontSize;
+
+      ctx.font = `${fontSize}px Arial`;
+      ctx.fillStyle = '#000000';
+      ctx.fillText(letter, 0, fontSize * 0.8);
+
+      const texture = canvas.toDataURL();
+
+      const letterBody = Bodies.rectangle(x, y, canvas.width, canvas.height, {
+        restitution: 0.6,
+        render: {
+          sprite: {
+            texture: texture,
+            xScale: 1,
+            yScale: 1
+          }
+        }
+      });
+
+      Composite.add(world, letterBody);
+    }
+
+    window.addEventListener('click', e => {
+      createLetter(e.clientX, e.clientY);
+    });
+
+    // Resize support
+    window.addEventListener('resize', () => {
+      location.reload(); // simple reset on resize
+    });
+  </script>
 </body>
 </html>
