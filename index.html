@@ -11,10 +11,8 @@
             margin: 0;
             display: flex;
             height: 100dvh;
-            justify-content: center;
             align-items: center;
             font-family: Arial, sans-serif;
-            text-align: center;
             font-size: 0.9rem;
             line-height: 1.2rem;
             background-color: white;
@@ -22,8 +20,15 @@
         }
         .content {
             max-width: 280px;
-            position: absolute;
+            margin: 0 24px;
+            text-align: left;
             transition: all 0.5s ease;
+        }
+        .links {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-top: 24px; /* Updated space between the sentence and the links */
         }
         a {
             color: inherit;
@@ -41,12 +46,20 @@
 <body>
     <div class="content">
         <p>Steve Crosby is a designer in California, currently making interfaces at PSA and small apps at Internet Friends LLC.</p>
-        <a href="https://bsky.app/profile/stevecrosby.bsky.social" target="_blank">
-           Bluesky
-            <svg xmlns="https://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" fill="none">
-                <path fill-rule="evenodd" clip-rule="evenodd" d="M14.625 2.8125H11.25V3.9375H13.267L8.60225 8.60225L9.39775 9.39775L14.0625 4.733V6.75H15.1875V3.375V2.8125H14.625ZM6.75 3.9375C5.1967 3.9375 3.9375 5.1967 3.9375 6.75V11.25C3.9375 12.8033 5.1967 14.0625 6.75 14.0625H11.25C12.8033 14.0625 14.0625 12.8033 14.0625 11.25V7.875H12.9375V11.25C12.9375 12.182 12.182 12.9375 11.25 12.9375H6.75C5.81802 12.9375 5.0625 12.182 5.0625 11.25V6.75C5.0625 5.81802 5.81802 5.0625 6.75 5.0625H10.125V3.9375H6.75Z" fill="black"/>
-            </svg>
-        </a>
+        <div class="links">
+            <a href="https://bsky.app/profile/stevecrosby.bsky.social" target="_blank">
+                Bluesky
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" fill="none">
+                    <path fill-rule="evenodd" clip-rule="evenodd" d="M14.625 2.8125H11.25V3.9375H13.267L8.60225 8.60225L9.39775 9.39775L14.0625 4.733V6.75H15.1875V3.375V2.8125H14.625ZM6.75 3.9375C5.1967 3.9375 3.9375 5.1967 3.9375 6.75V11.25C3.9375 12.8033 5.1967 14.0625 6.75 14.0625H11.25C12.8033 14.0625 14.0625 12.8033 14.0625 11.25V7.875H12.9375V11.25C12.9375 12.182 12.182 12.9375 11.25 12.9375H6.75C5.81802 12.9375 5.0625 12.182 5.0625 11.25V6.75C5.0625 5.81802 5.81802 5.0625 6.75 5.0625H10.125V3.9375H6.75Z" fill="black"/>
+                </svg>
+            </a>
+            <a href="https://interenetfriends.tech" target="_blank">
+                Internet Friends
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" fill="none">
+                    <path fill-rule="evenodd" clip-rule="evenodd" d="M14.625 2.8125H11.25V3.9375H13.267L8.60225 8.60225L9.39775 9.39775L14.0625 4.733V6.75H15.1875V3.375V2.8125H14.625ZM6.75 3.9375C5.1967 3.9375 3.9375 5.1967 3.9375 6.75V11.25C3.9375 12.8033 5.1967 14.0625 6.75 14.0625H11.25C12.8033 14.0625 14.0625 12.8033 14.0625 11.25V7.875H12.9375V11.25C12.9375 12.182 12.182 12.9375 11.25 12.9375H6.75C5.81802 12.9375 5.0625 12.182 5.0625 11.25V6.75C5.0625 5.81802 5.81802 5.0625 6.75 5.0625H10.125V3.9375H6.75Z" fill="black"/>
+                </svg>
+            </a>
+        </div>
     </div>
 </body>
 </html>
