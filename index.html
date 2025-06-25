@@ -57,7 +57,23 @@
 </head>
 <body>
     <div class="content">
-        <p>_ __._\|,__🐌_____..__|,__ _</p>
+<div id="snail-container" style="font-family: monospace; white-space: pre;"></div>
+
+<script>
+function generateSnailTrail() {
+    const maxLength = 10;
+    let trail = '';
+    for (let i = 0; i < maxLength; i++) {
+        // 20% chance of gap
+        trail += Math.random() < 0.2 ? ' ' : '_';
+    }
+    trail += '🐌';
+    return trail;
+}
+
+// Insert into the page
+document.getElementById('snail-container').textContent = generateSnailTrail();
+</script>
             
 <p>I'm a designer in California currently working at PSA, the card grading company. Here I get to make interfaces and websites alongside a team of really cool people.</p>
 
