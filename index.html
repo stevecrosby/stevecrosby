@@ -31,6 +31,7 @@
       height: auto;
       display: block;
       margin-bottom: 40px;
+      cursor: pointer; /* shows clickable hand */
     }
 
     @media (min-width: 768px) {
@@ -68,7 +69,6 @@
   </div>
 
   <script>
-    // List all images in your "work" folder here:
     const images = [
       "images/imessage-1.png",
       "images/imessage-2.png",
@@ -78,10 +78,10 @@
     let index = 0;
     const imgElement = document.getElementById("slideshow");
 
-    setInterval(() => {
+    imgElement.addEventListener("click", () => {
       index = (index + 1) % images.length;
       imgElement.src = images[index];
-    }, 3000); // change image every 3 seconds
+    });
   </script>
 </body>
 </html>
