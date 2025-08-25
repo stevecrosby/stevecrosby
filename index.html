@@ -49,7 +49,8 @@
 </head>
 <body>
   <div class="content">
-    <img src="work/imessage-1.png" alt="imessage-1">
+    <img id="slideshow" src="work/imessage-1.png" alt="slideshow image">
+    
     <p>Hello, I'm Steve</p>
     
     <p>I'm a designer in California currently working at PSA, the card grading company. I like collecting things (currently smiski's), walking around trader joe's, and the color green.</p>
@@ -65,5 +66,23 @@
       </a>
     </p>
   </div>
+
+  <script>
+    // List all images in your "work" folder here:
+    const images = [
+      "work/imessage-1.png",
+      "work/imessage-2.png",
+      "work/imessage-3.png",
+      "work/imessage-4.png"
+    ];
+
+    let index = 0;
+    const imgElement = document.getElementById("slideshow");
+
+    setInterval(() => {
+      index = (index + 1) % images.length;
+      imgElement.src = images[index];
+    }, 3000); // change image every 3 seconds
+  </script>
 </body>
 </html>
